@@ -1,0 +1,56 @@
+name: Daily Dashboard Refresh
+
+on:
+  schedule:
+    - cron: '30 0 * * *'   # 06:00 AM IST (UTC+5:30) every day
+  workflow_dispatch:         # also allows manual "Run workflow" button in GitHub UI
+
+permissions:
+  contents: write            # needed to commit & push the refreshed HTML
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repo
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Set up Python 3.12
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      # 3. Install google-cloud-bigquery
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. Write the service account key from GitHub Secret to a temp file
+      #    Secret name: GCP_SA_KEY  (add this in repo Settings → Secrets → Actions)
+      - name: Authenticate to Google Cloud
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          echo "$GCP_SA_KEY" > /tmp/gcp_key.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp_key.json" >> $GITHUB_ENV
+
+      # 5. Run the refresh — updates used_car_dashboard.html in place
+      - name: Refresh dashboard data
+        run: python refresh_dashboard.py
+
+      # 6. Copy to index.html so GitHub Pages serves it at the root URL
+      - name: Copy to index.html
+        run: cp used_car_dashboard.html index.html
+
+      # 7. Commit and push if anything changed
+      - name: Commit & push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html used_car_dashboard.html
+          git diff --cached --quiet \
+            && echo "No changes — dashboard data unchanged." \
+            || (git commit -m "refresh: daily data update $(date -u '+%Y-%m-%d')" && git push)
