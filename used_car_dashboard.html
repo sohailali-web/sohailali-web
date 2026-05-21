@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Used Car Analytics — Live Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:#1e293b}::-webkit-scrollbar-thumb{background:#475569;border-radius:3px}
+.wrap{max-width:1400px;margin:0 auto;padding:20px 24px}
+/* header */
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.hdr h1{font-size:21px;font-weight:700;color:#f1f5f9;letter-spacing:-.02em}
+.hdr .sub{font-size:11px;color:#475569;margin-top:3px}
+.hdr .refreshed{text-align:right;font-size:11px;color:#475569}
+.hdr .refreshed strong{display:block;font-size:13px;color:#818cf8;font-weight:600}
+/* filters */
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#1e293b;border-radius:10px;padding:10px 14px;margin-bottom:18px}
+.filter-label{font-size:11px;color:#64748b;font-weight:700;letter-spacing:.05em}
+.month-btn{padding:3px 9px;font-size:11px;border-radius:20px;cursor:pointer;font-weight:600;border:1px solid #334155;background:transparent;color:#64748b;transition:all .15s}
+.month-btn.on{background:#312e81;color:#818cf8;border-color:#4338ca}
+.filter-sep{width:1px;height:22px;background:#334155;margin:0 4px}
+select.fsel{background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer}
+.reset-btn{padding:3px 12px;font-size:11px;border-radius:20px;cursor:pointer;background:#450a0a;color:#fca5a5;border:1px solid #991b1b}
+/* tabs */
+.tab-nav{display:flex;gap:2px;border-bottom:1px solid #1e293b;margin-bottom:18px}
+.tab-btn{padding:9px 16px;font-size:13px;font-weight:600;background:transparent;cursor:pointer;border:none;color:#64748b;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn.active{color:#818cf8;border-bottom-color:#6366f1}
+.tab-panel{display:none}.tab-panel.active{display:block}
+/* kpi */
+.kpi-row{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.kpi{flex:1;min-width:150px;background:#1e293b;border-radius:10px;padding:16px 18px;border-left:4px solid var(--c)}
+.kpi .ktitle{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.kpi .kval{font-size:26px;font-weight:700;color:#f1f5f9;line-height:1}
+.kpi .ksub{font-size:11px;margin-top:5px;color:#64748b}
+.kpi .ksub.up{color:#4ade80}.kpi .ksub.dn{color:#f87171}
+/* grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.box{background:#1e293b;border-radius:12px;padding:16px}
+.box-title{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.chart-wrap{position:relative}
+/* table */
+.tbl-wrap{overflow-y:auto;max-height:260px;border-radius:6px}
+table{width:100%;border-collapse:collapse}
+th{position:sticky;top:0;background:#0f172a;padding:7px 10px;text-align:left;font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;white-space:nowrap}
+td{padding:6px 10px;font-size:12px;border-bottom:1px solid #1e293b}
+tr:nth-child(even) td{background:#162032}
+/* badges */
+.badge{display:inline-block;padding:2px 7px;border-radius:9999px;font-size:10px;font-weight:700}
+.b-up{background:#052e16;color:#4ade80}.b-dn{background:#450a0a;color:#f87171}.b-flat{background:#1e293b;color:#94a3b8}
+.b-ind{background:#1d4ed822;color:#60a5fa}.b-par{background:#065f4622;color:#34d399}.b-cor{background:#78350f22;color:#fbbf24}
+/* insight cards */
+.insight{background:#0f172a;border-radius:8px;padding:14px}
+.insight .icon{font-size:20px;margin-bottom:6px}
+.insight .ititle{font-size:12px;font-weight:600;color:#f1f5f9;margin-bottom:4px}
+.insight .ibody{font-size:11px;color:#94a3b8;line-height:1.5}
+/* footer */
+.footer{margin-top:20px;padding:10px 14px;background:#1e293b;border-radius:8px;font-size:11px;color:#475569;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer code{color:#818cf8}
+/* t2l color */
+.t2l-hi{color:#4ade80;font-weight:700}.t2l-md{color:#fbbf24;font-weight:700}.t2l-lo{color:#f87171;font-weight:700}
+/* rate color */
+.rate-hi{color:#4ade80;font-weight:700}.rate-md{color:#fbbf24;font-weight:700}.rate-lo{color:#f87171;font-weight:700}
+@media(max-width:860px){.g2,.g21,.g12,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div>
+      <h1>🚗 Used Car Analytics Dashboard</h1>
+      <div class="sub">Data: Sep 2025 – May 2026 &nbsp;·&nbsp; project: product-dashboard-487908 &nbsp;·&nbsp; 2.6M+ leads &nbsp;·&nbsp; 49K+ active listings</div>
+    </div>
+    <div class="refreshed">Last refreshed<strong>May 21, 2026</strong><span style="font-size:10px;color:#334155">ETL lag: 2–3 days</span></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="filter-label">MONTH</span>
+    <div id="month-btns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+    <div class="filter-sep"></div>
+    <select class="fsel" id="sel-state"><option value="All">All States</option></select>
+    <select class="fsel" id="sel-seller">
+      <option value="All">All Sellers</option>
+      <option>Individual</option><option>Partner</option><option>Corporate</option>
+    </select>
+    <div class="filter-sep"></div>
+    <button class="reset-btn" id="reset-btn" style="display:none" onclick="resetFilters()">✕ Reset</button>
+  </div>
+
+  <!-- Tab Nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('leads',this)">📊 Lead Analytics</button>
+    <button class="tab-btn" onclick="switchTab('listings',this)">🏷️ Listings & T2L</button>
+    <button class="tab-btn" onclick="switchTab('renewals',this)">🔄 Dealer Renewals</button>
+  </div>
+
+  <!-- TAB: LEADS -->
+  <div id="tab-leads" class="tab-panel active">
+    <div class="kpi-row" id="leads-kpis"></div>
+    <div class="g21">
+      <div class="box"><div class="box-title">Monthly Lead Trend — by Source</div><div class="chart-wrap" style="height:220px"><canvas id="c-trend"></canvas></div></div>
+      <div class="box"><div class="box-title">Source Split</div><div class="chart-wrap" style="height:200px"><canvas id="c-donut"></canvas></div><div id="source-legend" style="margin-top:8px"></div></div>
+    </div>
+    <div class="g2">
+      <div class="box"><div class="box-title">Top States by Lead Volume</div><div class="chart-wrap" style="height:260px"><canvas id="c-state-bar"></canvas></div></div>
+      <div class="box"><div class="box-title">State-wise Lead Table</div><div class="tbl-wrap"><table><thead><tr><th>State</th><th>Total Leads</th><th>Last Month</th><th>MoM %</th></tr></thead><tbody id="state-tbody"></tbody></table></div></div>
+    </div>
+  </div>
+
+  <!-- TAB: LISTINGS -->
+  <div id="tab-listings" class="tab-panel">
+    <div class="kpi-row" id="listing-kpis"></div>
+    <div class="g2">
+      <div class="box"><div class="box-title">Listings vs Leads vs T2L — by Seller</div><div class="chart-wrap" style="height:220px"><canvas id="c-seller-bar"></canvas></div></div>
+      <div class="box"><div class="box-title">Seller Performance</div><div class="tbl-wrap"><table><thead><tr><th>Seller</th><th>Listings</th><th>Leads</th><th>T2L</th><th>Zero-Lead %</th></tr></thead><tbody id="seller-tbody"></tbody></table></div></div>
+    </div>
+    <div class="box" style="margin-bottom:14px">
+      <div class="box-title">City × Seller — T2L Detail <span style="color:#334155;font-size:10px;margin-left:6px">Green ≥10x · Yellow ≥5x · Red &lt;5x</span></div>
+      <div class="tbl-wrap" style="max-height:280px"><table><thead><tr><th>City</th><th>State</th><th>Seller</th><th>Active Listings</th><th>Zero-Lead</th><th>Total Leads</th><th>T2L (x)</th></tr></thead><tbody id="t2l-tbody"></tbody></table></div>
+    </div>
+    <div class="box"><div class="box-title">City-wise Lead Volume (Active Listings)</div><div class="chart-wrap" style="height:220px"><canvas id="c-city-bar"></canvas></div></div>
+  </div>
+
+  <!-- TAB: RENEWALS -->
+  <div id="tab-renewals" class="tab-panel">
+    <div class="kpi-row" id="renewal-kpis"></div>
+    <div class="g21">
+      <div class="box"><div class="box-title">Monthly Renewal Trend — Renewed vs Churned vs Rate%</div><div class="chart-wrap" style="height:240px"><canvas id="c-renewal-trend"></canvas></div></div>
+      <div class="box">
+        <div class="box-title">Month-wise Breakdown</div>
+        <div class="tbl-wrap"><table><thead><tr><th>Month</th><th>Due</th><th>Renewed</th><th>Churned</th><th>Rate%</th></tr></thead><tbody id="renewal-tbody"></tbody></table></div>
+        <div style="margin-top:10px;padding:10px;background:#0f172a;border-radius:7px;font-size:11px;color:#475569;line-height:1.6">
+          <span class="rate-hi">Green</span> ≥35% &nbsp; <span class="rate-md">Yellow</span> ≥27% &nbsp; <span class="rate-lo">Red</span> &lt;27%<br>
+          May'26 is partial. ETL lag: 2–3 days.
+        </div>
+      </div>
+    </div>
+    <div class="g3" id="renewal-insights">
+      <div class="insight"><div class="icon">🎯</div><div class="ititle">Best Renewal Month</div><div class="ibody">Mar'26 had the highest renewal rate at 37.9% — 99 of 261 expiring dealers renewed.</div></div>
+      <div class="insight"><div class="icon">⚠️</div><div class="ititle">Churn Alert</div><div class="ibody">Jan'26 saw the most packages expire (365) with only 26.8% renewal — highest absolute churn of 267 dealers.</div></div>
+      <div class="insight"><div class="icon">📦</div><div class="ititle">Top Package: Discover</div><div class="ibody">Discover is the most-held package. Aspire shows high churn concentration in Delhi & Maharashtra.</div></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>Dataset: <code>product-dashboard-487908.used_car_metrics</code> · Source: BigQuery · Excludes ZigWheels traffic</span>
+    <span>GirnarCare · Used Car Analytics · Refresh: daily</span>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════ DATA ═══════════════════════════ */
+const MONTHS = ["Nov'25","Dec'25","Jan'26","Feb'26","Mar'26","Apr'26","May'26"];
+const STATES = ["Delhi","Maharashtra","Karnataka","Uttar Pradesh","Telangana","Gujarat","Haryana","Rajasthan","Tamil Nadu","West Bengal","Madhya Pradesh","Chandigarh","Bihar","Punjab","Uttarakhand","Kerala","Andhra Pradesh","Odisha","Jharkhand","Pondicherry","Jammu & Kashmir","Himachal Pradesh","Chhattisgarh"];
+
+const MONTHLY_SOURCE = [
+  {month:"Nov'25","M-Site":32082,Android:29011,IOS:8271,Botify:9407,Web:5435,total:84206},
+  {month:"Dec'25","M-Site":111312,Android:96670,IOS:27555,Botify:25147,Web:18128,total:278812},
+  {month:"Jan'26","M-Site":119274,Android:102829,IOS:29677,Botify:28432,Web:18408,total:298620},
+  {month:"Feb'26","M-Site":112463,Android:84136,IOS:25740,Botify:24908,Web:15848,total:263095},
+  {month:"Mar'26","M-Site":162535,Android:102650,IOS:33416,Botify:28757,Web:24859,total:352217},
+  {month:"Apr'26","M-Site":172611,Android:96133,IOS:31016,Botify:29560,Web:29723,total:359043},
+  {month:"May'26","M-Site":114454,Android:66126,IOS:20573,Botify:17804,Web:18514,total:237471},
+];
+
+const STATE_MONTHLY = [
+  {state:"Delhi",            "Nov'25":12817,"Dec'25":42016,"Jan'26":42025,"Feb'26":39597,"Mar'26":50713,"Apr'26":51842,"May'26":33522},
+  {state:"Maharashtra",     "Nov'25":11607,"Dec'25":36689,"Jan'26":37644,"Feb'26":32089,"Mar'26":42978,"Apr'26":45627,"May'26":33073},
+  {state:"Karnataka",       "Nov'25":3985,"Dec'25":13756,"Jan'26":15520,"Feb'26":12833,"Mar'26":18320,"Apr'26":18072,"May'26":10908},
+  {state:"Uttar Pradesh",   "Nov'25":4162,"Dec'25":14551,"Jan'26":16199,"Feb'26":12426,"Mar'26":16518,"Apr'26":16973,"May'26":10854},
+  {state:"Telangana",       "Nov'25":3494,"Dec'25":10656,"Jan'26":10999,"Feb'26":8454,"Mar'26":12716,"Apr'26":13010,"May'26":8307},
+  {state:"Gujarat",         "Nov'25":3076,"Dec'25":10074,"Jan'26":10233,"Feb'26":8747,"Mar'26":13135,"Apr'26":14677,"May'26":11562},
+  {state:"Haryana",         "Nov'25":3058,"Dec'25":9754,"Jan'26":10361,"Feb'26":8847,"Mar'26":11302,"Apr'26":12863,"May'26":8142},
+  {state:"Rajasthan",       "Nov'25":2652,"Dec'25":7935,"Jan'26":8406,"Feb'26":8037,"Mar'26":8983,"Apr'26":8784,"May'26":5776},
+  {state:"Tamil Nadu",      "Nov'25":2280,"Dec'25":7363,"Jan'26":7289,"Feb'26":6464,"Mar'26":9902,"Apr'26":8402,"May'26":4496},
+  {state:"West Bengal",     "Nov'25":1867,"Dec'25":6317,"Jan'26":6286,"Feb'26":5427,"Mar'26":7425,"Apr'26":7223,"May'26":4143},
+  {state:"Madhya Pradesh",  "Nov'25":783,"Dec'25":3163,"Jan'26":3270,"Feb'26":2535,"Mar'26":4106,"Apr'26":4149,"May'26":2547},
+  {state:"Chandigarh",      "Nov'25":580,"Dec'25":1778,"Jan'26":1889,"Feb'26":1516,"Mar'26":3358,"Apr'26":4726,"May'26":3907},
+  {state:"Bihar",           "Nov'25":456,"Dec'25":1868,"Jan'26":2247,"Feb'26":1429,"Mar'26":1658,"Apr'26":2013,"May'26":1458},
+  {state:"Punjab",          "Nov'25":400,"Dec'25":1512,"Jan'26":1756,"Feb'26":1272,"Mar'26":1755,"Apr'26":1727,"May'26":1123},
+  {state:"Uttarakhand",     "Nov'25":268,"Dec'25":1025,"Jan'26":1142,"Feb'26":854,"Mar'26":487,"Apr'26":549,"May'26":388},
+  {state:"Kerala",          "Nov'25":224,"Dec'25":718,"Jan'26":957,"Feb'26":835,"Mar'26":1337,"Apr'26":1368,"May'26":758},
+  {state:"Andhra Pradesh",  "Nov'25":221,"Dec'25":769,"Jan'26":731,"Feb'26":537,"Mar'26":872,"Apr'26":494,"May'26":291},
+  {state:"Odisha",          "Nov'25":211,"Dec'25":671,"Jan'26":754,"Feb'26":728,"Mar'26":984,"Apr'26":731,"May'26":357},
+  {state:"Jharkhand",       "Nov'25":32,"Dec'25":157,"Jan'26":155,"Feb'26":139,"Mar'26":104,"Apr'26":156,"May'26":74},
+  {state:"Pondicherry",     "Nov'25":25,"Dec'25":83,"Jan'26":106,"Feb'26":89,"Mar'26":152,"Apr'26":146,"May'26":63},
+  {state:"Jammu & Kashmir", "Nov'25":23,"Dec'25":103,"Jan'26":79,"Feb'26":64,"Mar'26":88,"Apr'26":58,"May'26":37},
+  {state:"Himachal Pradesh","Nov'25":17,"Dec'25":27,"Jan'26":32,"Feb'26":41,"Mar'26":28,"Apr'26":73,"May'26":101},
+  {state:"Chhattisgarh",    "Nov'25":8,"Dec'25":33,"Jan'26":176,"Feb'26":113,"Mar'26":88,"Apr'26":109,"May'26":52},
+];
+
+const LISTING_T2L = [
+  {city:"New Delhi",state:"Delhi",seller:"Partner",listings:2899,zeroLead:148,leads:43502,t2l:15.0},
+  {city:"Mumbai",state:"Maharashtra",seller:"Partner",listings:1989,zeroLead:207,leads:20531,t2l:10.3},
+  {city:"New Delhi",state:"Delhi",seller:"Individual",listings:1553,zeroLead:481,leads:6839,t2l:4.4},
+  {city:"Bangalore",state:"Karnataka",seller:"Corporate",listings:1133,zeroLead:112,leads:5121,t2l:4.5},
+  {city:"Bangalore",state:"Karnataka",seller:"Partner",listings:1078,zeroLead:140,leads:12951,t2l:12.0},
+  {city:"Nashik",state:"Maharashtra",seller:"Partner",listings:991,zeroLead:166,leads:3919,t2l:4.0},
+  {city:"Bangalore",state:"Karnataka",seller:"Individual",listings:925,zeroLead:217,leads:4500,t2l:4.9},
+  {city:"Pune",state:"Maharashtra",seller:"Corporate",listings:907,zeroLead:51,leads:4618,t2l:5.1},
+  {city:"Pune",state:"Maharashtra",seller:"Partner",listings:819,zeroLead:78,leads:12091,t2l:14.8},
+  {city:"Hyderabad",state:"Telangana",seller:"Corporate",listings:774,zeroLead:49,leads:4506,t2l:5.8},
+  {city:"New Delhi",state:"Delhi",seller:"Corporate",listings:739,zeroLead:21,leads:7917,t2l:10.7},
+  {city:"Mumbai",state:"Maharashtra",seller:"Individual",listings:619,zeroLead:170,leads:2441,t2l:3.9},
+  {city:"Gurgaon",state:"Haryana",seller:"Individual",listings:590,zeroLead:152,leads:2546,t2l:4.3},
+  {city:"Jaipur",state:"Rajasthan",seller:"Individual",listings:571,zeroLead:124,leads:2969,t2l:5.2},
+  {city:"Pune",state:"Maharashtra",seller:"Individual",listings:568,zeroLead:115,leads:2878,t2l:5.1},
+  {city:"Ahmedabad",state:"Gujarat",seller:"Corporate",listings:561,zeroLead:35,leads:4140,t2l:7.4},
+  {city:"Gurgaon",state:"Haryana",seller:"Corporate",listings:561,zeroLead:39,leads:4174,t2l:7.4},
+  {city:"Chennai",state:"Tamil Nadu",seller:"Corporate",listings:555,zeroLead:49,leads:2926,t2l:5.3},
+  {city:"Hyderabad",state:"Telangana",seller:"Individual",listings:488,zeroLead:85,leads:2843,t2l:5.8},
+  {city:"Mumbai",state:"Maharashtra",seller:"Corporate",listings:484,zeroLead:34,leads:2747,t2l:5.7},
+  {city:"Chennai",state:"Tamil Nadu",seller:"Partner",listings:477,zeroLead:145,leads:3078,t2l:6.5},
+  {city:"Kolkata",state:"West Bengal",seller:"Partner",listings:467,zeroLead:56,leads:4414,t2l:9.5},
+  {city:"Jaipur",state:"Rajasthan",seller:"Partner",listings:448,zeroLead:9,leads:9089,t2l:20.3},
+  {city:"Surat",state:"Gujarat",seller:"Partner",listings:447,zeroLead:20,leads:5514,t2l:12.3},
+  {city:"Ahmedabad",state:"Gujarat",seller:"Individual",listings:391,zeroLead:79,leads:2349,t2l:6.0},
+  {city:"Kolkata",state:"West Bengal",seller:"Corporate",listings:354,zeroLead:33,leads:1770,t2l:5.0},
+  {city:"Lucknow",state:"Uttar Pradesh",seller:"Corporate",listings:345,zeroLead:57,leads:2332,t2l:6.8},
+  {city:"Thane",state:"Maharashtra",seller:"Partner",listings:346,zeroLead:10,leads:3970,t2l:11.5},
+  {city:"Gurgaon",state:"Haryana",seller:"Partner",listings:260,zeroLead:27,leads:2697,t2l:10.4},
+  {city:"Nagpur",state:"Maharashtra",seller:"Partner",listings:276,zeroLead:15,leads:3369,t2l:12.2},
+  {city:"Lucknow",state:"Uttar Pradesh",seller:"Partner",listings:349,zeroLead:57,leads:2687,t2l:7.7},
+  {city:"Lucknow",state:"Uttar Pradesh",seller:"Individual",listings:269,zeroLead:52,leads:1319,t2l:4.9},
+  {city:"Ahmedabad",state:"Gujarat",seller:"Partner",listings:661,zeroLead:97,leads:5514,t2l:8.3},
+  {city:"Hyderabad",state:"Telangana",seller:"Partner",listings:658,zeroLead:76,leads:6402,t2l:9.7},
+  {city:"Indore",state:"Madhya Pradesh",seller:"Partner",listings:201,zeroLead:17,leads:2495,t2l:12.4},
+  {city:"Chandigarh",state:"Chandigarh",seller:"Partner",listings:336,zeroLead:76,leads:1916,t2l:5.7},
+];
+
+const RENEWAL_MONTHLY = [
+  {month:"Nov'25",due:111,renewed:32,churned:79,rate:28.8},
+  {month:"Dec'25",due:286,renewed:91,churned:195,rate:31.8},
+  {month:"Jan'26",due:365,renewed:98,churned:267,rate:26.8},
+  {month:"Feb'26",due:304,renewed:88,churned:216,rate:28.9},
+  {month:"Mar'26",due:261,renewed:99,churned:162,rate:37.9},
+  {month:"Apr'26",due:233,renewed:62,churned:171,rate:26.6},
+  {month:"May'26",due:113,renewed:26,churned:87,rate:23.0},
+];
+
+const SRC_COLS  = {  'M-Site':'#6366f1', Android:'#10b981', IOS:'#f59e0b', Botify:'#ef4444', Web:'#8b5cf6' };
+const SEL_COLS  = { Individual:'#3b82f6', Partner:'#10b981', Corporate:'#f59e0b' };
+const STATE_PAL = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#84cc16','#f97316','#14b8a6'];
+
+/* ═══════════════════════════ STATE ══════════════════════════ */
+let selMonths = [...MONTHS];
+let selState  = 'All';
+let selSeller = 'All';
+let curTab    = 'leads';
+let charts    = {};
+
+/* ═══════════════════════════ HELPERS ════════════════════════ */
+const fmt  = n => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+const fmtN = n => n != null ? Number(n).toLocaleString('en-IN') : '—';
+const pct  = (a,b) => b ? ((a-b)/b*100).toFixed(1) : null;
+const dn   = (id, html) => { const el=document.getElementById(id); if(el) el.innerHTML=html; };
+const hex  = (c,a) => c + Math.round(a*255).toString(16).padStart(2,'0');
+
+function destroyCharts() {
+  Object.values(charts).forEach(c=>{ try{ c.destroy(); }catch(e){} });
+  charts = {};
+}
+
+const CHART_DEFAULTS = {
+  color: '#94a3b8',
+  plugins: { legend: { labels: { color:'#94a3b8', font:{size:11}, boxWidth:12 } },
+    tooltip: { backgroundColor:'#1e293b', titleColor:'#f1f5f9', bodyColor:'#94a3b8',
+      borderColor:'#334155', borderWidth:1, padding:10 } },
+  scales: {
+    x: { ticks:{color:'#64748b',font:{size:10}}, grid:{color:'#1e3a5f'} },
+    y: { ticks:{color:'#64748b',font:{size:10},callback:v=>fmt(v)}, grid:{color:'#1e3a5f'} }
+  }
+};
+
+function mkChart(id, cfg) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  if (charts[id]) { charts[id].destroy(); }
+  Chart.defaults.color = '#94a3b8';
+  const c = new Chart(el, cfg);
+  charts[id] = c;
+  return c;
+}
+
+/* ═══════════════════════════ KPI CARDS ═══════════════════════ */
+function kpiHtml(title, val, sub, color, dir) {
+  const cls = dir==='up'?'up':dir==='dn'?'dn':'';
+  const arrow = dir==='up'?'▲ ':dir==='dn'?'▼ ':'';
+  return `<div class="kpi" style="--c:${color}">
+    <div class="ktitle">${title}</div>
+    <div class="kval">${val}</div>
+    <div class="ksub ${cls}">${arrow}${sub}</div>
+  </div>`;
+}
+
+/* ═══════════════════════════ TAB: LEADS ═════════════════════ */
+function renderLeads() {
+  const filtered = MONTHLY_SOURCE.filter(r => selMonths.includes(r.month));
+  const totalLeads = filtered.reduce((s,r)=>s+r.total,0);
+
+  /* KPIs */
+  const lastIdx = selMonths.length-1;
+  const lastM = selMonths[lastIdx];
+  const prevM = MONTHS[MONTHS.indexOf(lastM)-1];
+  const lastRow = MONTHLY_SOURCE.find(r=>r.month===lastM);
+  const prevRow = MONTHLY_SOURCE.find(r=>r.month===prevM);
+  const mom = prevRow && lastRow ? pct(lastRow.total, prevRow.total) : null;
+
+  const stateForKPI = selState==='All' ? STATE_MONTHLY[0] : STATE_MONTHLY.find(s=>s.state===selState)||STATE_MONTHLY[0];
+  const topStateLeads = selMonths.reduce((s,m)=>s+(stateForKPI[m]||0),0);
+
+  dn('leads-kpis',
+    kpiHtml('Total Leads', fmt(totalLeads), mom ? `${mom}% MoM` : 'selected period', '#6366f1', mom>0?'up':mom<0?'dn':'') +
+    kpiHtml('Top Source', 'M-Site', fmt(filtered.reduce((s,r)=>s+r['M-Site'],0))+' leads', '#10b981', 'up') +
+    kpiHtml(selState==='All'?'Top State: Delhi':'State: '+selState, fmt(topStateLeads), 'leads in selection', '#f59e0b', '') +
+    kpiHtml('Avg / Month', fmt(Math.round(totalLeads/(filtered.length||1))), `${filtered.length} month(s)`, '#8b5cf6', '')
+  );
+
+  /* Monthly trend stacked area */
+  mkChart('c-trend', {
+    type: 'line',
+    data: {
+      labels: filtered.map(r=>r.month),
+      datasets: Object.keys(SRC_COLS).map(src => ({
+        label: src, data: filtered.map(r=>r[src]||0),
+        backgroundColor: hex(SRC_COLS[src], 0.6), borderColor: SRC_COLS[src],
+        fill: true, tension: 0.35, pointRadius: 3, borderWidth: 1.5
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { ...CHART_DEFAULTS.plugins },
+      scales: {
+        x: CHART_DEFAULTS.scales.x,
+        y: { ...CHART_DEFAULTS.scales.y, stacked: true }
+      }
+    }
+  });
+
+  /* Source donut */
+  const srcTotals = Object.keys(SRC_COLS).map(src=>({
+    src, val: filtered.reduce((s,r)=>s+(r[src]||0),0), col: SRC_COLS[src]
+  })).sort((a,b)=>b.val-a.val);
+  mkChart('c-donut', {
+    type: 'doughnut',
+    data: { labels: srcTotals.map(s=>s.src), datasets:[{
+      data: srcTotals.map(s=>s.val), backgroundColor: srcTotals.map(s=>s.col), borderWidth:0, hoverOffset:4
+    }] },
+    options: {
+      responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins: { ...CHART_DEFAULTS.plugins, tooltip:{
+        ...CHART_DEFAULTS.plugins.tooltip,
+        callbacks:{ label: ctx=>' '+ctx.label+': '+fmtN(ctx.raw)+' ('+((ctx.raw/totalLeads)*100).toFixed(1)+'%)' }
+      }}
+    }
+  });
+  dn('source-legend', srcTotals.map(s=>`
+    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.col};margin-right:5px"></span>${s.src}</span>
+      <span style="color:#94a3b8">${((s.val/totalLeads)*100).toFixed(1)}%</span>
+    </div>`).join(''));
+
+  /* State bar */
+  const stateData = STATE_MONTHLY.map(s=>({
+    state: s.state, total: selMonths.reduce((sum,m)=>sum+(s[m]||0),0)
+  })).filter(s=>selState==='All'||s.state===selState)
+    .sort((a,b)=>b.total-a.total).slice(0, selState==='All'?10:1);
+
+  mkChart('c-state-bar', {
+    type: 'bar',
+    data: {
+      labels: stateData.map(s=>s.state.length>12?s.state.slice(0,12)+'…':s.state),
+      datasets:[{ label:'Leads', data: stateData.map(s=>s.total),
+        backgroundColor: stateData.map((_,i)=>STATE_PAL[i%10]), borderRadius:4, barPercentage:0.7 }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ ...CHART_DEFAULTS.plugins, legend:{display:false} },
+      scales:{ x:{...CHART_DEFAULTS.scales.x}, y:{ticks:{color:'#94a3b8',font:{size:10}},grid:{color:'#1e3a5f'}} }
+    }
+  });
+
+  /* State table */
+  const stateTableData = STATE_MONTHLY.map(s=>{
+    const total = selMonths.reduce((sum,m)=>sum+(s[m]||0),0);
+    const lastM2 = selMonths[selMonths.length-1];
+    const prevM2 = MONTHS[MONTHS.indexOf(lastM2)-1];
+    const m  = pct(s[lastM2]||0, s[prevM2]||0);
+    return { state:s.state, total, lastMonth:s[lastM2]||0, mom:m };
+  }).filter(s=>selState==='All'||s.state===selState).sort((a,b)=>b.total-a.total);
+
+  dn('state-tbody', stateTableData.map(s=>`
+    <tr>
+      <td style="font-weight:500;color:#e2e8f0">${s.state}</td>
+      <td style="color:#818cf8">${fmtN(s.total)}</td>
+      <td>${fmtN(s.lastMonth)}</td>
+      <td>${s.mom!=null?`<span class="badge ${s.mom>0?'b-up':'b-dn'}">${s.mom>0?'▲':'▼'} ${Math.abs(s.mom)}%</span>`:'—'}</td>
+    </tr>`).join(''));
+}
+
+/* ═══════════════════════════ TAB: LISTINGS ══════════════════ */
+function renderListings() {
+  const rows = LISTING_T2L.filter(r =>
+    (selState==='All'||r.state===selState) &&
+    (selSeller==='All'||r.seller===selSeller)
+  );
+
+  const totL  = rows.reduce((s,r)=>s+r.listings,0);
+  const totLd = rows.reduce((s,r)=>s+r.leads,0);
+  const totZ  = rows.reduce((s,r)=>s+r.zeroLead,0);
+  const avgT  = totL ? (totLd/totL).toFixed(1) : 0;
+  const zPct  = totL ? ((totZ/totL)*100).toFixed(1) : 0;
+
+  dn('listing-kpis',
+    kpiHtml('Active Listings', fmtN(totL), 'filtered', '#3b82f6', '') +
+    kpiHtml('Total Leads', fmt(totLd), 'on active listings', '#10b981', '') +
+    kpiHtml('Avg T2L Ratio', avgT+'x', 'leads per listing', '#f59e0b', avgT>=7?'up':'') +
+    kpiHtml('Zero-Lead %', zPct+'%', fmtN(totZ)+' listings', '#ef4444', zPct>30?'dn':'')
+  );
+
+  /* Seller summary */
+  const sellers = ['Individual','Partner','Corporate'].map(sel=>{
+    const sr = LISTING_T2L.filter(r=>r.seller===sel&&(selState==='All'||r.state===selState));
+    const sl=sr.reduce((s,r)=>s+r.listings,0), ld=sr.reduce((s,r)=>s+r.leads,0), zl=sr.reduce((s,r)=>s+r.zeroLead,0);
+    return { seller:sel, listings:sl, leads:ld, zeroLead:zl, t2l: sl?(ld/sl).toFixed(1):0 };
+  }).filter(s=>selSeller==='All'||s.seller===selSeller);
+
+  mkChart('c-seller-bar', {
+    type: 'bar',
+    data: {
+      labels: sellers.map(s=>s.seller),
+      datasets:[
+        { label:'Listings', data:sellers.map(s=>s.listings), backgroundColor:'#3b82f688', borderColor:'#3b82f6', borderWidth:1, borderRadius:4, yAxisID:'y' },
+        { label:'Leads',    data:sellers.map(s=>s.leads),    backgroundColor:'#10b98188', borderColor:'#10b981', borderWidth:1, borderRadius:4, yAxisID:'y' },
+        { label:'T2L (x)',  data:sellers.map(s=>+s.t2l),     type:'line', borderColor:'#f59e0b', backgroundColor:'transparent',
+          borderWidth:2.5, pointRadius:6, pointBackgroundColor:'#f59e0b', yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ ...CHART_DEFAULTS.plugins },
+      scales:{
+        y:{ ...CHART_DEFAULTS.scales.y, position:'left' },
+        y2:{ position:'right', ticks:{color:'#f59e0b',font:{size:10},callback:v=>v+'x'}, grid:{display:false} },
+        x: CHART_DEFAULTS.scales.x
+      }
+    }
+  });
+
+  const sellerCls = {Individual:'b-ind',Partner:'b-par',Corporate:'b-cor'};
+  dn('seller-tbody', sellers.map(s=>`
+    <tr>
+      <td><span class="badge ${sellerCls[s.seller]}">${s.seller}</span></td>
+      <td>${fmtN(s.listings)}</td>
+      <td style="color:#818cf8">${fmtN(s.leads)}</td>
+      <td class="${+s.t2l>=10?'t2l-hi':+s.t2l>=5?'t2l-md':'t2l-lo'}">${s.t2l}x</td>
+      <td style="color:${s.listings&&(s.zeroLead/s.listings)>0.3?'#f87171':'#94a3b8'}">${s.listings?((s.zeroLead/s.listings)*100).toFixed(0)+'%':'—'}</td>
+    </tr>`).join(''));
+
+  /* T2L detail table */
+  dn('t2l-tbody', rows.sort((a,b)=>b.t2l-a.t2l).map(r=>`
+    <tr>
+      <td style="font-weight:500">${r.city}</td>
+      <td style="color:#64748b">${r.state}</td>
+      <td><span class="badge ${sellerCls[r.seller]}">${r.seller}</span></td>
+      <td>${fmtN(r.listings)}</td>
+      <td style="color:${r.zeroLead/r.listings>0.3?'#f87171':'#94a3b8'}">${fmtN(r.zeroLead)} (${((r.zeroLead/r.listings)*100).toFixed(0)}%)</td>
+      <td style="color:#818cf8">${fmtN(r.leads)}</td>
+      <td class="${r.t2l>=10?'t2l-hi':r.t2l>=5?'t2l-md':'t2l-lo'}">${r.t2l}x</td>
+    </tr>`).join(''));
+
+  /* City bar */
+  const cityMap = {};
+  rows.forEach(r=>{ if(!cityMap[r.city]) cityMap[r.city]={city:r.city,listings:0,leads:0}; cityMap[r.city].listings+=r.listings; cityMap[r.city].leads+=r.leads; });
+  const cityData = Object.values(cityMap).sort((a,b)=>b.leads-a.leads).slice(0,12).map(r=>({...r,t2l:r.listings?(r.leads/r.listings).toFixed(1):0}));
+
+  mkChart('c-city-bar', {
+    type: 'bar',
+    data: {
+      labels: cityData.map(c=>c.city),
+      datasets:[
+        { label:'Leads', data:cityData.map(c=>c.leads), backgroundColor:'#6366f188', borderColor:'#6366f1', borderWidth:1, borderRadius:4, yAxisID:'y' },
+        { label:'Listings', data:cityData.map(c=>c.listings), backgroundColor:'#33415588', borderColor:'#475569', borderWidth:1, borderRadius:4, yAxisID:'y' },
+        { label:'T2L (x)', data:cityData.map(c=>+c.t2l), type:'line', borderColor:'#f59e0b', backgroundColor:'transparent', borderWidth:2, pointRadius:4, pointBackgroundColor:'#f59e0b', yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ ...CHART_DEFAULTS.plugins },
+      scales:{
+        y:{ ...CHART_DEFAULTS.scales.y, position:'left' },
+        y2:{ position:'right', ticks:{color:'#f59e0b',font:{size:10},callback:v=>v+'x'}, grid:{display:false} },
+        x:{ ticks:{color:'#94a3b8',font:{size:10},maxRotation:30}, grid:{color:'#1e3a5f'} }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════ TAB: RENEWALS ══════════════════ */
+function renderRenewals() {
+  const rows = RENEWAL_MONTHLY.filter(r=>selMonths.includes(r.month));
+  const totalDue = rows.reduce((s,r)=>s+r.due,0);
+  const totalRen = rows.reduce((s,r)=>s+r.renewed,0);
+  const totalChr = rows.reduce((s,r)=>s+r.churned,0);
+  const avgRate  = totalDue ? ((totalRen/totalDue)*100).toFixed(1) : 0;
+  const lastRate = rows[rows.length-1]?.rate;
+  const prevIdx  = RENEWAL_MONTHLY.indexOf(rows[rows.length-1])-1;
+  const prevRate = prevIdx>=0 ? RENEWAL_MONTHLY[prevIdx].rate : null;
+
+  dn('renewal-kpis',
+    kpiHtml('Total Due', fmtN(totalDue), 'packages expired', '#6366f1', '') +
+    kpiHtml('Renewed', fmtN(totalRen), avgRate+'% avg rate', '#10b981', 'up') +
+    kpiHtml('Churned', fmtN(totalChr), 'not renewed', '#ef4444', 'dn') +
+    kpiHtml('Last Month Rate', (lastRate||0)+'%', prevRate?`prev: ${prevRate}%`:'', '#f59e0b', lastRate>prevRate?'up':'dn')
+  );
+
+  mkChart('c-renewal-trend', {
+    type: 'bar',
+    data: {
+      labels: rows.map(r=>r.month),
+      datasets:[
+        { label:'Renewed', data:rows.map(r=>r.renewed), backgroundColor:'#10b98188', borderColor:'#10b981', borderWidth:1, borderRadius:4, stack:'s', yAxisID:'y' },
+        { label:'Churned', data:rows.map(r=>r.churned), backgroundColor:'#ef444488', borderColor:'#ef4444', borderWidth:1, borderRadius:4, stack:'s', yAxisID:'y' },
+        { label:'Rate %',  data:rows.map(r=>r.rate),   type:'line', borderColor:'#f59e0b', backgroundColor:'transparent',
+          borderWidth:2.5, pointRadius:6, pointBackgroundColor:'#f59e0b', yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ ...CHART_DEFAULTS.plugins },
+      scales:{
+        y:{ ...CHART_DEFAULTS.scales.y, stacked:true, position:'left' },
+        y2:{ position:'right', min:0, max:100, ticks:{color:'#f59e0b',font:{size:10},callback:v=>v+'%'}, grid:{display:false} },
+        x: CHART_DEFAULTS.scales.x
+      }
+    }
+  });
+
+  dn('renewal-tbody', rows.map((r,i)=>`
+    <tr>
+      <td style="font-weight:600">${r.month}</td>
+      <td>${r.due}</td>
+      <td style="color:#4ade80">${r.renewed}</td>
+      <td style="color:#f87171">${r.churned}</td>
+      <td class="${r.rate>=35?'rate-hi':r.rate>=27?'rate-md':'rate-lo'}">${r.rate}%</td>
+    </tr>`).join('') + `
+    <tr style="border-top:2px solid #334155;background:#1e293b">
+      <td style="color:#94a3b8;font-weight:700">TOTAL</td>
+      <td style="font-weight:700">${totalDue}</td>
+      <td style="color:#4ade80;font-weight:700">${totalRen}</td>
+      <td style="color:#f87171;font-weight:700">${totalChr}</td>
+      <td class="${avgRate>=35?'rate-hi':avgRate>=27?'rate-md':'rate-lo'}">${avgRate}%</td>
+    </tr>`);
+}
+
+/* ═══════════════════════════ TAB SWITCHING ══════════════════ */
+function switchTab(tab, btn) {
+  curTab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  destroyCharts();
+  setTimeout(()=>renderTab(), 20);
+}
+
+function renderTab() {
+  destroyCharts();
+  if (curTab==='leads')    renderLeads();
+  if (curTab==='listings') renderListings();
+  if (curTab==='renewals') renderRenewals();
+}
+
+/* ═══════════════════════════ FILTERS ════════════════════════ */
+function buildFilters() {
+  /* Month buttons */
+  const container = document.getElementById('month-btns');
+  MONTHS.forEach(m=>{
+    const btn = document.createElement('button');
+    btn.className = 'month-btn on';
+    btn.textContent = m;
+    btn.dataset.month = m;
+    btn.onclick = () => toggleMonth(m, btn);
+    container.appendChild(btn);
+  });
+
+  /* State dropdown */
+  const stSel = document.getElementById('sel-state');
+  STATES.forEach(s=>{ const o=document.createElement('option'); o.value=s; o.textContent=s; stSel.appendChild(o); });
+  stSel.onchange = () => { selState=stSel.value; updateResetBtn(); renderTab(); };
+
+  /* Seller */
+  document.getElementById('sel-seller').onchange = function(){ selSeller=this.value; updateResetBtn(); renderTab(); };
+}
+
+function toggleMonth(m, btn) {
+  if (selMonths.includes(m)) {
+    if (selMonths.length===1) return; /* at least 1 month */
+    selMonths = selMonths.filter(x=>x!==m);
+    btn.classList.remove('on');
+  } else {
+    selMonths = MONTHS.filter(x=>selMonths.includes(x)||x===m);
+    btn.classList.add('on');
+  }
+  updateResetBtn();
+  renderTab();
+}
+
+function resetFilters() {
+  selMonths = [...MONTHS];
+  selState  = 'All';
+  selSeller = 'All';
+  document.querySelectorAll('.month-btn').forEach(b=>b.classList.add('on'));
+  document.getElementById('sel-state').value  = 'All';
+  document.getElementById('sel-seller').value = 'All';
+  updateResetBtn();
+  renderTab();
+}
+
+function updateResetBtn() {
+  const active = selMonths.length<MONTHS.length || selState!=='All' || selSeller!=='All';
+  document.getElementById('reset-btn').style.display = active ? 'block' : 'none';
+}
+
+/* ═══════════════════════════ INIT ═══════════════════════════ */
+document.addEventListener('DOMContentLoaded', ()=>{
+  buildFilters();
+  renderTab();
+});
+</script>
+</body>
+</html>

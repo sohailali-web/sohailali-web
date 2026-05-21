@@ -1,0 +1,17 @@
+# logs
+refresh.log
+scheduler.log
+
+# Windows Task Scheduler helpers (not needed in repo)
+run_refresh.bat
+setup_task_scheduler.ps1
+serve.ps1
+
+# Claude Code session files
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
