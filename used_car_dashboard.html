@@ -76,9 +76,9 @@ tr:nth-child(even) td{background:#162032}
   <div class="hdr">
     <div>
       <h1>🚗 Used Car Analytics Dashboard</h1>
-      <div class="sub">Data: Nov 2025 – Jul 2026 &nbsp;·&nbsp; project: product-dashboard-487908 &nbsp;·&nbsp; 2.6M+ leads &nbsp;·&nbsp; 49K+ active listings</div>
+      <div class="sub">Data: Dec 2025 – Jul 2026 &nbsp;·&nbsp; project: product-dashboard-487908 &nbsp;·&nbsp; 2.6M+ leads &nbsp;·&nbsp; 49K+ active listings</div>
     </div>
-    <div class="refreshed">Last refreshed<strong>Jul 31, 2026</strong><span style="font-size:10px;color:#334155">ETL lag: 2–3 days</span></div>
+    <div class="refreshed">Last refreshed<strong>Aug 01, 2026</strong><span style="font-size:10px;color:#334155">ETL lag: 2–3 days</span></div>
   </div>
 
   <!-- Filters -->
@@ -159,11 +159,10 @@ tr:nth-child(even) td{background:#162032}
 
 <script>
 /* ═══════════════════════════ DATA ═══════════════════════════ */
-const MONTHS = ["Nov'25","Dec'25","Jan'26","Feb'26","Mar'26","Apr'26","May'26","Jun'26","Jul'26"];
-const STATES = ["Maharashtra","Delhi","Uttar Pradesh","Karnataka","Gujarat","Haryana","Rajasthan","Telangana","Tamil Nadu","Madhya Pradesh","West Bengal","Bihar","Punjab","Chandigarh","Odisha","Andhra Pradesh","Jharkhand","Kerala","Uttarakhand","Chhattisgarh","Assam","Jammu & Kashmir","Himachal Pradesh","Goa","Pondicherry","Tripura","Meghalaya","Arunachal Pradesh","Nagaland","Dadra and Nagar Haveli","Sikkim","Manipur","Andaman & Nicobar","Daman and Diu","Mizoram"];
+const MONTHS = ["Dec'25","Jan'26","Feb'26","Mar'26","Apr'26","May'26","Jun'26","Jul'26"];
+const STATES = ["Maharashtra","Delhi","Uttar Pradesh","Karnataka","Gujarat","Haryana","Rajasthan","Telangana","Tamil Nadu","Madhya Pradesh","West Bengal","Bihar","Punjab","Chandigarh","Odisha","Jharkhand","Andhra Pradesh","Kerala","Uttarakhand","Chhattisgarh","Assam","Jammu & Kashmir","Himachal Pradesh","Goa","Pondicherry","Tripura","Meghalaya","Arunachal Pradesh","Nagaland","Dadra and Nagar Haveli","Sikkim","Manipur","Andaman & Nicobar","Daman and Diu","Mizoram"];
 
 const MONTHLY_SOURCE = [
-  {month:"Nov'25","M-Site":3455,Android:3146,IOS:877,Botify:210,Web:330,total:8018},
   {month:"Dec'25","M-Site":111312,Android:96670,IOS:27555,Botify:25147,Web:18128,total:278812},
   {month:"Jan'26","M-Site":119273,Android:102826,IOS:29677,Botify:28432,Web:18408,total:298616},
   {month:"Feb'26","M-Site":112463,Android:84133,IOS:25740,Botify:24908,Web:15848,total:263092},
@@ -171,102 +170,101 @@ const MONTHLY_SOURCE = [
   {month:"Apr'26","M-Site":172610,Android:96133,IOS:31016,Botify:29560,Web:29723,total:359042},
   {month:"May'26","M-Site":178212,Android:102162,IOS:32073,Botify:27342,Web:28429,total:368218},
   {month:"Jun'26","M-Site":157724,Android:84278,IOS:28809,Botify:23342,Web:25965,total:320118},
-  {month:"Jul'26","M-Site":152429,Android:78631,IOS:25745,Botify:21959,Web:26681,total:308724}
+  {month:"Jul'26","M-Site":157771,Android:81166,IOS:26497,Botify:22898,Web:27602,total:319314}
 ];
 
 const STATE_MONTHLY = [
-  {state:"Maharashtra","Nov'25":1572,"Dec'25":48484,"Jan'26":49115,"Feb'26":43322,"Mar'26":58931,"Apr'26":62038,"May'26":67866,"Jun'26":58873,"Jul'26":57788},
-  {state:"Delhi","Nov'25":1281,"Dec'25":46365,"Jan'26":47466,"Feb'26":45487,"Mar'26":58937,"Apr'26":60758,"May'26":59223,"Jun'26":48157,"Jul'26":44044},
-  {state:"Uttar Pradesh","Nov'25":669,"Dec'25":29672,"Jan'26":34055,"Feb'26":28044,"Mar'26":36431,"Apr'26":38424,"May'26":39741,"Jun'26":33637,"Jul'26":29526},
-  {state:"Karnataka","Nov'25":609,"Dec'25":20670,"Jan'26":22435,"Feb'26":19063,"Mar'26":28801,"Apr'26":28266,"May'26":26268,"Jun'26":24504,"Jul'26":23304},
-  {state:"Gujarat","Nov'25":573,"Dec'25":17760,"Jan'26":17521,"Feb'26":15318,"Mar'26":21949,"Apr'26":23446,"May'26":26803,"Jun'26":23448,"Jul'26":28236},
-  {state:"Haryana","Nov'25":441,"Dec'25":17211,"Jan'26":19320,"Feb'26":16875,"Mar'26":21570,"Apr'26":21963,"May'26":21619,"Jun'26":18088,"Jul'26":17534},
-  {state:"Rajasthan","Nov'25":433,"Dec'25":16322,"Jan'26":18640,"Feb'26":16843,"Mar'26":20260,"Apr'26":19854,"May'26":21224,"Jun'26":18964,"Jul'26":18069},
-  {state:"Telangana","Nov'25":446,"Dec'25":14557,"Jan'26":15332,"Feb'26":12344,"Mar'26":18086,"Apr'26":18284,"May'26":19456,"Jun'26":15648,"Jul'26":14175},
-  {state:"Tamil Nadu","Nov'25":355,"Dec'25":11126,"Jan'26":11146,"Feb'26":10295,"Mar'26":15656,"Apr'26":13415,"May'26":11755,"Jun'26":12370,"Jul'26":11528},
-  {state:"Madhya Pradesh","Nov'25":244,"Dec'25":8664,"Jan'26":9896,"Feb'26":8326,"Mar'26":10845,"Apr'26":10760,"May'26":10738,"Jun'26":9363,"Jul'26":9022},
-  {state:"West Bengal","Nov'25":224,"Dec'25":8787,"Jan'26":9304,"Feb'26":8752,"Mar'26":11649,"Apr'26":11238,"May'26":10482,"Jun'26":8895,"Jul'26":8423},
-  {state:"Bihar","Nov'25":151,"Dec'25":6227,"Jan'26":6864,"Feb'26":5659,"Mar'26":6999,"Apr'26":8061,"May'26":8913,"Jun'26":7289,"Jul'26":7442},
-  {state:"Punjab","Nov'25":148,"Dec'25":5934,"Jan'26":6447,"Feb'26":5505,"Mar'26":5844,"Apr'26":5938,"May'26":6375,"Jun'26":5950,"Jul'26":6779},
-  {state:"Chandigarh","Nov'25":63,"Dec'25":2585,"Jan'26":2821,"Feb'26":2101,"Mar'26":4243,"Apr'26":5588,"May'26":7788,"Jun'26":7200,"Jul'26":7573},
-  {state:"Odisha","Nov'25":97,"Dec'25":2768,"Jan'26":3376,"Feb'26":3152,"Mar'26":4404,"Apr'26":4491,"May'26":4042,"Jun'26":3977,"Jul'26":3805},
-  {state:"Andhra Pradesh","Nov'25":150,"Dec'25":3300,"Jan'26":3636,"Feb'26":3357,"Mar'26":4394,"Apr'26":3643,"May'26":4076,"Jun'26":3522,"Jul'26":2951},
-  {state:"Jharkhand","Nov'25":86,"Dec'25":3026,"Jan'26":3493,"Feb'26":2873,"Mar'26":3884,"Apr'26":4287,"May'26":4372,"Jun'26":3477,"Jul'26":3454},
-  {state:"Kerala","Nov'25":61,"Dec'25":2596,"Jan'26":3100,"Feb'26":2838,"Mar'26":4023,"Apr'26":4061,"May'26":3579,"Jun'26":3403,"Jul'26":2813},
-  {state:"Uttarakhand","Nov'25":85,"Dec'25":2936,"Jan'26":3090,"Feb'26":2851,"Mar'26":2853,"Apr'26":2769,"May'26":2852,"Jun'26":2661,"Jul'26":2462},
-  {state:"Chhattisgarh","Nov'25":67,"Dec'25":2286,"Jan'26":2971,"Feb'26":2478,"Mar'26":2949,"Apr'26":2469,"May'26":2642,"Jun'26":2661,"Jul'26":2440},
-  {state:"Assam","Nov'25":65,"Dec'25":1763,"Jan'26":2407,"Feb'26":2252,"Mar'26":3001,"Apr'26":3033,"May'26":2616,"Jun'26":2593,"Jul'26":1987},
-  {state:"Jammu & Kashmir","Nov'25":65,"Dec'25":2407,"Jan'26":2539,"Feb'26":1959,"Mar'26":2302,"Apr'26":2094,"May'26":1731,"Jun'26":1955,"Jul'26":1872},
-  {state:"Himachal Pradesh","Nov'25":58,"Dec'25":1656,"Jan'26":1716,"Feb'26":1659,"Mar'26":2049,"Apr'26":1754,"May'26":1666,"Jun'26":1345,"Jul'26":1425},
-  {state:"Goa","Nov'25":31,"Dec'25":618,"Jan'26":587,"Feb'26":472,"Mar'26":617,"Apr'26":739,"May'26":805,"Jun'26":838,"Jul'26":778},
-  {state:"Pondicherry","Nov'25":14,"Dec'25":360,"Jan'26":385,"Feb'26":329,"Mar'26":480,"Apr'26":593,"May'26":536,"Jun'26":359,"Jul'26":387},
-  {state:"Tripura","Nov'25":8,"Dec'25":145,"Jan'26":184,"Feb'26":174,"Mar'26":227,"Apr'26":208,"May'26":295,"Jun'26":279,"Jul'26":182},
-  {state:"Meghalaya","Nov'25":1,"Dec'25":99,"Jan'26":180,"Feb'26":230,"Mar'26":229,"Apr'26":325,"May'26":349,"Jun'26":118,"Jul'26":114},
-  {state:"Arunachal Pradesh","Nov'25":8,"Dec'25":100,"Jan'26":138,"Feb'26":116,"Mar'26":112,"Apr'26":108,"May'26":98,"Jun'26":83,"Jul'26":76},
-  {state:"Nagaland","Nov'25":2,"Dec'25":56,"Jan'26":96,"Feb'26":71,"Mar'26":92,"Apr'26":116,"May'26":108,"Jun'26":67,"Jul'26":115},
-  {state:"Dadra and Nagar Haveli","Nov'25":4,"Dec'25":76,"Jan'26":127,"Feb'26":67,"Mar'26":64,"Apr'26":71,"May'26":45,"Jun'26":103,"Jul'26":147},
-  {state:"Sikkim","Nov'25":3,"Dec'25":58,"Jan'26":64,"Feb'26":81,"Mar'26":89,"Apr'26":119,"May'26":65,"Jun'26":88,"Jul'26":110},
-  {state:"Manipur","Nov'25":1,"Dec'25":36,"Jan'26":65,"Feb'26":88,"Mar'26":77,"Apr'26":54,"May'26":39,"Jun'26":57,"Jul'26":38},
-  {state:"Andaman & Nicobar","Nov'25":1,"Dec'25":58,"Jan'26":33,"Feb'26":38,"Mar'26":58,"Apr'26":41,"May'26":24,"Jun'26":76,"Jul'26":87},
-  {state:"Daman and Diu","Nov'25":2,"Dec'25":96,"Jan'26":49,"Feb'26":55,"Mar'26":86,"Apr'26":15,"May'26":20,"Jun'26":45,"Jul'26":22},
-  {state:"Mizoram","Nov'25":0,"Dec'25":7,"Jan'26":18,"Feb'26":18,"Mar'26":16,"Apr'26":19,"May'26":7,"Jun'26":25,"Jul'26":16}
+  {state:"Maharashtra","Dec'25":48484,"Jan'26":49115,"Feb'26":43322,"Mar'26":58931,"Apr'26":62038,"May'26":67866,"Jun'26":58873,"Jul'26":59864},
+  {state:"Delhi","Dec'25":46365,"Jan'26":47466,"Feb'26":45487,"Mar'26":58937,"Apr'26":60758,"May'26":59223,"Jun'26":48157,"Jul'26":45491},
+  {state:"Uttar Pradesh","Dec'25":29672,"Jan'26":34055,"Feb'26":28044,"Mar'26":36431,"Apr'26":38424,"May'26":39741,"Jun'26":33637,"Jul'26":30405},
+  {state:"Karnataka","Dec'25":20670,"Jan'26":22435,"Feb'26":19063,"Mar'26":28801,"Apr'26":28266,"May'26":26268,"Jun'26":24504,"Jul'26":24101},
+  {state:"Gujarat","Dec'25":17760,"Jan'26":17521,"Feb'26":15318,"Mar'26":21949,"Apr'26":23446,"May'26":26803,"Jun'26":23448,"Jul'26":29257},
+  {state:"Haryana","Dec'25":17211,"Jan'26":19320,"Feb'26":16875,"Mar'26":21570,"Apr'26":21963,"May'26":21619,"Jun'26":18088,"Jul'26":18089},
+  {state:"Rajasthan","Dec'25":16322,"Jan'26":18640,"Feb'26":16843,"Mar'26":20260,"Apr'26":19854,"May'26":21224,"Jun'26":18964,"Jul'26":18684},
+  {state:"Telangana","Dec'25":14557,"Jan'26":15332,"Feb'26":12344,"Mar'26":18086,"Apr'26":18284,"May'26":19456,"Jun'26":15648,"Jul'26":14662},
+  {state:"Tamil Nadu","Dec'25":11126,"Jan'26":11146,"Feb'26":10295,"Mar'26":15656,"Apr'26":13415,"May'26":11755,"Jun'26":12370,"Jul'26":11885},
+  {state:"Madhya Pradesh","Dec'25":8664,"Jan'26":9896,"Feb'26":8326,"Mar'26":10845,"Apr'26":10760,"May'26":10738,"Jun'26":9363,"Jul'26":9392},
+  {state:"West Bengal","Dec'25":8787,"Jan'26":9304,"Feb'26":8752,"Mar'26":11649,"Apr'26":11238,"May'26":10482,"Jun'26":8895,"Jul'26":8766},
+  {state:"Bihar","Dec'25":6227,"Jan'26":6864,"Feb'26":5659,"Mar'26":6999,"Apr'26":8061,"May'26":8913,"Jun'26":7289,"Jul'26":7704},
+  {state:"Punjab","Dec'25":5934,"Jan'26":6447,"Feb'26":5505,"Mar'26":5844,"Apr'26":5938,"May'26":6375,"Jun'26":5950,"Jul'26":7048},
+  {state:"Chandigarh","Dec'25":2585,"Jan'26":2821,"Feb'26":2101,"Mar'26":4243,"Apr'26":5588,"May'26":7788,"Jun'26":7200,"Jul'26":7898},
+  {state:"Odisha","Dec'25":2768,"Jan'26":3376,"Feb'26":3152,"Mar'26":4404,"Apr'26":4491,"May'26":4042,"Jun'26":3977,"Jul'26":3920},
+  {state:"Jharkhand","Dec'25":3026,"Jan'26":3493,"Feb'26":2873,"Mar'26":3884,"Apr'26":4287,"May'26":4372,"Jun'26":3477,"Jul'26":3598},
+  {state:"Andhra Pradesh","Dec'25":3300,"Jan'26":3636,"Feb'26":3357,"Mar'26":4394,"Apr'26":3643,"May'26":4076,"Jun'26":3522,"Jul'26":3046},
+  {state:"Kerala","Dec'25":2596,"Jan'26":3100,"Feb'26":2838,"Mar'26":4023,"Apr'26":4061,"May'26":3579,"Jun'26":3403,"Jul'26":2896},
+  {state:"Uttarakhand","Dec'25":2936,"Jan'26":3090,"Feb'26":2851,"Mar'26":2853,"Apr'26":2769,"May'26":2852,"Jun'26":2661,"Jul'26":2539},
+  {state:"Chhattisgarh","Dec'25":2286,"Jan'26":2971,"Feb'26":2478,"Mar'26":2949,"Apr'26":2469,"May'26":2642,"Jun'26":2661,"Jul'26":2500},
+  {state:"Assam","Dec'25":1763,"Jan'26":2407,"Feb'26":2252,"Mar'26":3001,"Apr'26":3033,"May'26":2616,"Jun'26":2593,"Jul'26":2053},
+  {state:"Jammu & Kashmir","Dec'25":2407,"Jan'26":2539,"Feb'26":1959,"Mar'26":2302,"Apr'26":2094,"May'26":1731,"Jun'26":1955,"Jul'26":1901},
+  {state:"Himachal Pradesh","Dec'25":1656,"Jan'26":1716,"Feb'26":1659,"Mar'26":2049,"Apr'26":1754,"May'26":1666,"Jun'26":1345,"Jul'26":1490},
+  {state:"Goa","Dec'25":618,"Jan'26":587,"Feb'26":472,"Mar'26":617,"Apr'26":739,"May'26":805,"Jun'26":838,"Jul'26":787},
+  {state:"Pondicherry","Dec'25":360,"Jan'26":385,"Feb'26":329,"Mar'26":480,"Apr'26":593,"May'26":536,"Jun'26":359,"Jul'26":397},
+  {state:"Tripura","Dec'25":145,"Jan'26":184,"Feb'26":174,"Mar'26":227,"Apr'26":208,"May'26":295,"Jun'26":279,"Jul'26":189},
+  {state:"Meghalaya","Dec'25":99,"Jan'26":180,"Feb'26":230,"Mar'26":229,"Apr'26":325,"May'26":349,"Jun'26":118,"Jul'26":120},
+  {state:"Arunachal Pradesh","Dec'25":100,"Jan'26":138,"Feb'26":116,"Mar'26":112,"Apr'26":108,"May'26":98,"Jun'26":83,"Jul'26":79},
+  {state:"Nagaland","Dec'25":56,"Jan'26":96,"Feb'26":71,"Mar'26":92,"Apr'26":116,"May'26":108,"Jun'26":67,"Jul'26":123},
+  {state:"Dadra and Nagar Haveli","Dec'25":76,"Jan'26":127,"Feb'26":67,"Mar'26":64,"Apr'26":71,"May'26":45,"Jun'26":103,"Jul'26":153},
+  {state:"Sikkim","Dec'25":58,"Jan'26":64,"Feb'26":81,"Mar'26":89,"Apr'26":119,"May'26":65,"Jun'26":88,"Jul'26":113},
+  {state:"Manipur","Dec'25":36,"Jan'26":65,"Feb'26":88,"Mar'26":77,"Apr'26":54,"May'26":39,"Jun'26":57,"Jul'26":38},
+  {state:"Andaman & Nicobar","Dec'25":58,"Jan'26":33,"Feb'26":38,"Mar'26":58,"Apr'26":41,"May'26":24,"Jun'26":76,"Jul'26":88},
+  {state:"Daman and Diu","Dec'25":96,"Jan'26":49,"Feb'26":55,"Mar'26":86,"Apr'26":15,"May'26":20,"Jun'26":45,"Jul'26":22},
+  {state:"Mizoram","Dec'25":7,"Jan'26":18,"Feb'26":18,"Mar'26":16,"Apr'26":19,"May'26":7,"Jun'26":25,"Jul'26":16}
 ];
 
 const LISTING_T2L = [
-  {city:"New Delhi",state:"Delhi",seller:"Partner",listings:2842,zeroLead:266,leads:35602,t2l:12.5},
-  {city:"Mumbai",state:"Maharashtra",seller:"Partner",listings:2098,zeroLead:277,leads:19129,t2l:9.1},
-  {city:"Ahmedabad",state:"Gujarat",seller:"Partner",listings:1279,zeroLead:64,leads:15802,t2l:12.4},
-  {city:"Bangalore",state:"Karnataka",seller:"Partner",listings:1127,zeroLead:129,leads:12379,t2l:11.0},
-  {city:"Pune",state:"Maharashtra",seller:"Partner",listings:699,zeroLead:39,leads:10463,t2l:15.0},
-  {city:"Nashik",state:"Maharashtra",seller:"Partner",listings:882,zeroLead:30,leads:9673,t2l:11.0},
-  {city:"Hyderabad",state:"Telangana",seller:"Partner",listings:664,zeroLead:50,leads:7730,t2l:11.6},
-  {city:"New Delhi",state:"Delhi",seller:"Corporate",listings:741,zeroLead:97,leads:7473,t2l:10.1},
-  {city:"Jaipur",state:"Rajasthan",seller:"Partner",listings:381,zeroLead:13,leads:6783,t2l:17.8},
-  {city:"Chandigarh",state:"Chandigarh",seller:"Partner",listings:432,zeroLead:16,leads:5787,t2l:13.4},
-  {city:"Kolkata",state:"West Bengal",seller:"Partner",listings:511,zeroLead:62,leads:4838,t2l:9.5},
-  {city:"New Delhi",state:"Delhi",seller:"Individual",listings:1819,zeroLead:764,leads:4819,t2l:2.6},
-  {city:"Bangalore",state:"Karnataka",seller:"Corporate",listings:1113,zeroLead:310,leads:4705,t2l:4.2},
-  {city:"Gurgaon",state:"Haryana",seller:"Corporate",listings:613,zeroLead:129,leads:3981,t2l:6.5},
-  {city:"Bangalore",state:"Karnataka",seller:"Individual",listings:956,zeroLead:208,leads:3866,t2l:4.0},
-  {city:"Hyderabad",state:"Telangana",seller:"Corporate",listings:766,zeroLead:164,leads:3774,t2l:4.9},
-  {city:"Chennai",state:"Tamil Nadu",seller:"Corporate",listings:596,zeroLead:156,leads:3761,t2l:6.3},
-  {city:"Pune",state:"Maharashtra",seller:"Corporate",listings:818,zeroLead:195,leads:3689,t2l:4.5},
-  {city:"Ahmedabad",state:"Gujarat",seller:"Corporate",listings:761,zeroLead:159,leads:3474,t2l:4.6},
-  {city:"Jaipur",state:"Rajasthan",seller:"Corporate",listings:359,zeroLead:51,leads:2940,t2l:8.2},
-  {city:"Lucknow",state:"Uttar Pradesh",seller:"Corporate",listings:484,zeroLead:121,leads:2812,t2l:5.8},
-  {city:"Nagpur",state:"Maharashtra",seller:"Partner",listings:245,zeroLead:14,leads:2747,t2l:11.2},
-  {city:"Gurgaon",state:"Haryana",seller:"Partner",listings:265,zeroLead:35,leads:2643,t2l:10.0},
-  {city:"Pune",state:"Maharashtra",seller:"Individual",listings:602,zeroLead:139,leads:2634,t2l:4.4},
-  {city:"Thane",state:"Maharashtra",seller:"Partner",listings:342,zeroLead:47,leads:2617,t2l:7.7},
-  {city:"Jaipur",state:"Rajasthan",seller:"Individual",listings:636,zeroLead:192,leads:2603,t2l:4.1},
-  {city:"Chennai",state:"Tamil Nadu",seller:"Partner",listings:426,zeroLead:98,leads:2601,t2l:6.1},
-  {city:"Faridabad",state:"Haryana",seller:"Partner",listings:127,zeroLead:25,leads:2473,t2l:19.5},
-  {city:"Mumbai",state:"Maharashtra",seller:"Corporate",listings:466,zeroLead:116,leads:2332,t2l:5.0},
-  {city:"Thane",state:"Maharashtra",seller:"Corporate",listings:268,zeroLead:56,leads:2224,t2l:8.3},
-  {city:"Hyderabad",state:"Telangana",seller:"Individual",listings:498,zeroLead:94,leads:2187,t2l:4.4},
-  {city:"Chandigarh",state:"Chandigarh",seller:"Corporate",listings:271,zeroLead:38,leads:2175,t2l:8.0},
-  {city:"Mohali",state:"Punjab",seller:"Partner",listings:374,zeroLead:46,leads:1996,t2l:5.3},
-  {city:"Kolkata",state:"West Bengal",seller:"Corporate",listings:421,zeroLead:113,leads:1964,t2l:4.7},
-  {city:"Mumbai",state:"Maharashtra",seller:"Individual",listings:565,zeroLead:178,leads:1962,t2l:3.5},
-  {city:"Lucknow",state:"Uttar Pradesh",seller:"Partner",listings:165,zeroLead:6,leads:1935,t2l:11.7},
-  {city:"Indore",state:"Madhya Pradesh",seller:"Partner",listings:150,zeroLead:4,leads:1917,t2l:12.8},
-  {city:"Surat",state:"Gujarat",seller:"Partner",listings:245,zeroLead:28,leads:1900,t2l:7.8},
-  {city:"Ahmedabad",state:"Gujarat",seller:"Individual",listings:493,zeroLead:145,leads:1709,t2l:3.5},
-  {city:"Gurgaon",state:"Haryana",seller:"Individual",listings:629,zeroLead:249,leads:1630,t2l:2.6},
-  {city:"Vadodara",state:"Gujarat",seller:"Corporate",listings:199,zeroLead:23,leads:1376,t2l:6.9},
-  {city:"Lucknow",state:"Uttar Pradesh",seller:"Individual",listings:315,zeroLead:107,leads:1255,t2l:4.0},
-  {city:"Bhubaneswar",state:"Odisha",seller:"Individual",listings:263,zeroLead:64,leads:1198,t2l:4.6},
-  {city:"Coimbatore",state:"Tamil Nadu",seller:"Corporate",listings:215,zeroLead:63,leads:1192,t2l:5.5},
-  {city:"Ghaziabad",state:"Uttar Pradesh",seller:"Corporate",listings:329,zeroLead:85,leads:1144,t2l:3.5},
-  {city:"Indore",state:"Madhya Pradesh",seller:"Corporate",listings:114,zeroLead:32,leads:1130,t2l:9.9},
-  {city:"Surat",state:"Gujarat",seller:"Corporate",listings:146,zeroLead:28,leads:1098,t2l:7.5},
-  {city:"Chennai",state:"Tamil Nadu",seller:"Individual",listings:237,zeroLead:25,leads:1088,t2l:4.6},
-  {city:"Ghaziabad",state:"Uttar Pradesh",seller:"Individual",listings:396,zeroLead:155,leads:1044,t2l:2.6},
-  {city:"Bhopal",state:"Madhya Pradesh",seller:"Individual",listings:248,zeroLead:52,leads:982,t2l:4.0}
+  {city:"New Delhi",state:"Delhi",seller:"Partner",listings:2846,zeroLead:266,leads:35134,t2l:12.3},
+  {city:"Mumbai",state:"Maharashtra",seller:"Partner",listings:2101,zeroLead:268,leads:18862,t2l:9.0},
+  {city:"Ahmedabad",state:"Gujarat",seller:"Partner",listings:1303,zeroLead:66,leads:16242,t2l:12.5},
+  {city:"Bangalore",state:"Karnataka",seller:"Partner",listings:1086,zeroLead:120,leads:12155,t2l:11.2},
+  {city:"Pune",state:"Maharashtra",seller:"Partner",listings:727,zeroLead:61,leads:10268,t2l:14.1},
+  {city:"Nashik",state:"Maharashtra",seller:"Partner",listings:868,zeroLead:25,leads:9883,t2l:11.4},
+  {city:"Hyderabad",state:"Telangana",seller:"Partner",listings:667,zeroLead:52,leads:7828,t2l:11.7},
+  {city:"New Delhi",state:"Delhi",seller:"Corporate",listings:752,zeroLead:97,leads:7428,t2l:9.9},
+  {city:"Jaipur",state:"Rajasthan",seller:"Partner",listings:382,zeroLead:14,leads:6841,t2l:17.9},
+  {city:"Chandigarh",state:"Chandigarh",seller:"Partner",listings:392,zeroLead:12,leads:5386,t2l:13.7},
+  {city:"New Delhi",state:"Delhi",seller:"Individual",listings:1817,zeroLead:755,leads:4845,t2l:2.7},
+  {city:"Kolkata",state:"West Bengal",seller:"Partner",listings:507,zeroLead:59,leads:4719,t2l:9.3},
+  {city:"Bangalore",state:"Karnataka",seller:"Corporate",listings:1207,zeroLead:370,leads:4718,t2l:3.9},
+  {city:"Gurgaon",state:"Haryana",seller:"Corporate",listings:640,zeroLead:136,leads:3958,t2l:6.2},
+  {city:"Bangalore",state:"Karnataka",seller:"Individual",listings:946,zeroLead:198,leads:3892,t2l:4.1},
+  {city:"Pune",state:"Maharashtra",seller:"Corporate",listings:842,zeroLead:198,leads:3774,t2l:4.5},
+  {city:"Hyderabad",state:"Telangana",seller:"Corporate",listings:752,zeroLead:169,leads:3692,t2l:4.9},
+  {city:"Ahmedabad",state:"Gujarat",seller:"Corporate",listings:756,zeroLead:152,leads:3468,t2l:4.6},
+  {city:"Chennai",state:"Tamil Nadu",seller:"Corporate",listings:597,zeroLead:158,leads:3354,t2l:5.6},
+  {city:"Jaipur",state:"Rajasthan",seller:"Corporate",listings:336,zeroLead:40,leads:2975,t2l:8.9},
+  {city:"Lucknow",state:"Uttar Pradesh",seller:"Corporate",listings:486,zeroLead:123,leads:2794,t2l:5.7},
+  {city:"Nagpur",state:"Maharashtra",seller:"Partner",listings:245,zeroLead:12,leads:2752,t2l:11.2},
+  {city:"Jaipur",state:"Rajasthan",seller:"Individual",listings:650,zeroLead:200,leads:2648,t2l:4.1},
+  {city:"Gurgaon",state:"Haryana",seller:"Partner",listings:262,zeroLead:43,leads:2625,t2l:10.0},
+  {city:"Thane",state:"Maharashtra",seller:"Partner",listings:340,zeroLead:43,leads:2613,t2l:7.7},
+  {city:"Pune",state:"Maharashtra",seller:"Individual",listings:600,zeroLead:137,leads:2587,t2l:4.3},
+  {city:"Faridabad",state:"Haryana",seller:"Partner",listings:127,zeroLead:22,leads:2514,t2l:19.8},
+  {city:"Hyderabad",state:"Telangana",seller:"Individual",listings:513,zeroLead:105,leads:2240,t2l:4.4},
+  {city:"Mumbai",state:"Maharashtra",seller:"Corporate",listings:469,zeroLead:118,leads:2231,t2l:4.8},
+  {city:"Chandigarh",state:"Chandigarh",seller:"Corporate",listings:269,zeroLead:30,leads:2176,t2l:8.1},
+  {city:"Chennai",state:"Tamil Nadu",seller:"Partner",listings:416,zeroLead:84,leads:2122,t2l:5.1},
+  {city:"Mohali",state:"Punjab",seller:"Partner",listings:384,zeroLead:48,leads:2070,t2l:5.4},
+  {city:"Thane",state:"Maharashtra",seller:"Corporate",listings:274,zeroLead:64,leads:2039,t2l:7.4},
+  {city:"Mumbai",state:"Maharashtra",seller:"Individual",listings:562,zeroLead:173,leads:1995,t2l:3.5},
+  {city:"Surat",state:"Gujarat",seller:"Partner",listings:245,zeroLead:26,leads:1951,t2l:8.0},
+  {city:"Indore",state:"Madhya Pradesh",seller:"Partner",listings:153,zeroLead:6,leads:1948,t2l:12.7},
+  {city:"Kolkata",state:"West Bengal",seller:"Corporate",listings:411,zeroLead:102,leads:1940,t2l:4.7},
+  {city:"Lucknow",state:"Uttar Pradesh",seller:"Partner",listings:150,zeroLead:5,leads:1897,t2l:12.6},
+  {city:"Ahmedabad",state:"Gujarat",seller:"Individual",listings:497,zeroLead:155,leads:1678,t2l:3.4},
+  {city:"Gurgaon",state:"Haryana",seller:"Individual",listings:627,zeroLead:248,leads:1623,t2l:2.6},
+  {city:"Vadodara",state:"Gujarat",seller:"Corporate",listings:201,zeroLead:23,leads:1353,t2l:6.7},
+  {city:"Lucknow",state:"Uttar Pradesh",seller:"Individual",listings:313,zeroLead:110,leads:1214,t2l:3.9},
+  {city:"Coimbatore",state:"Tamil Nadu",seller:"Corporate",listings:210,zeroLead:54,leads:1205,t2l:5.7},
+  {city:"Bhubaneswar",state:"Odisha",seller:"Individual",listings:265,zeroLead:67,leads:1170,t2l:4.4},
+  {city:"Ghaziabad",state:"Uttar Pradesh",seller:"Corporate",listings:327,zeroLead:89,leads:1159,t2l:3.5},
+  {city:"Indore",state:"Madhya Pradesh",seller:"Corporate",listings:113,zeroLead:27,leads:1112,t2l:9.8},
+  {city:"Surat",state:"Gujarat",seller:"Corporate",listings:151,zeroLead:29,leads:1111,t2l:7.4},
+  {city:"Ghaziabad",state:"Uttar Pradesh",seller:"Individual",listings:387,zeroLead:147,leads:1061,t2l:2.7},
+  {city:"Chennai",state:"Tamil Nadu",seller:"Individual",listings:229,zeroLead:24,leads:1043,t2l:4.6},
+  {city:"Bhopal",state:"Madhya Pradesh",seller:"Individual",listings:247,zeroLead:53,leads:986,t2l:4.0}
 ];
 
 const RENEWAL_MONTHLY = [
-  {month:"Nov'25",due:16,renewed:3,churned:13,rate:18.8},
   {month:"Dec'25",due:245,renewed:81,churned:164,rate:33.1},
   {month:"Jan'26",due:263,renewed:90,churned:173,rate:34.2},
   {month:"Feb'26",due:190,renewed:80,churned:110,rate:42.1},
@@ -274,7 +272,7 @@ const RENEWAL_MONTHLY = [
   {month:"Apr'26",due:194,renewed:77,churned:117,rate:39.7},
   {month:"May'26",due:121,renewed:65,churned:56,rate:53.7},
   {month:"Jun'26",due:130,renewed:65,churned:65,rate:50.0},
-  {month:"Jul'26",due:143,renewed:44,churned:99,rate:30.8}
+  {month:"Jul'26",due:147,renewed:49,churned:98,rate:33.3}
 ];
 
 const SRC_COLS  = {  'M-Site':'#6366f1', Android:'#10b981', IOS:'#f59e0b', Botify:'#ef4444', Web:'#8b5cf6' };
