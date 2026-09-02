@@ -76,9 +76,9 @@ tr:nth-child(even) td{background:#162032}
   <div class="hdr">
     <div>
       <h1>🚗 Used Car Analytics Dashboard</h1>
-      <div class="sub">Data: Jan 2026 – Aug 2026 &nbsp;·&nbsp; project: product-dashboard-487908 &nbsp;·&nbsp; 2.7M+ leads &nbsp;·&nbsp; 49K+ active listings</div>
+      <div class="sub">Data: Jan 2026 – Aug 2026 &nbsp;·&nbsp; project: product-dashboard-487908 &nbsp;·&nbsp; 2.6M+ leads &nbsp;·&nbsp; 49K+ active listings</div>
     </div>
-    <div class="refreshed">Last refreshed<strong>Sep 01, 2026</strong><span style="font-size:10px;color:#334155">ETL lag: 2–3 days</span></div>
+    <div class="refreshed">Last refreshed<strong>Sep 02, 2026</strong><span style="font-size:10px;color:#334155">ETL lag: 2–3 days</span></div>
   </div>
 
   <!-- Filters -->
@@ -163,7 +163,7 @@ const MONTHS = ["Jan'26","Feb'26","Mar'26","Apr'26","May'26","Jun'26","Jul'26","
 const STATES = ["Maharashtra","Delhi","Uttar Pradesh","Karnataka","Gujarat","Haryana","Rajasthan","Telangana","Tamil Nadu","Madhya Pradesh","West Bengal","Bihar","Punjab","Chandigarh","Odisha","Jharkhand","Andhra Pradesh","Kerala","Uttarakhand","Chhattisgarh","Assam","Jammu & Kashmir","Himachal Pradesh","Goa","Pondicherry","Tripura","Meghalaya","Dadra and Nagar Haveli","Arunachal Pradesh","Nagaland","Sikkim","Manipur","Andaman & Nicobar","Daman and Diu","Mizoram"];
 
 const MONTHLY_SOURCE = [
-  {month:"Jan'26","M-Site":119273,Android:102826,IOS:29677,Botify:28432,Web:18408,total:298616},
+  {month:"Jan'26","M-Site":116067,Android:99880,IOS:28784,Botify:27651,Web:17915,total:290297},
   {month:"Feb'26","M-Site":112463,Android:84133,IOS:25740,Botify:24908,Web:15848,total:263092},
   {month:"Mar'26","M-Site":162525,Android:102650,IOS:33416,Botify:28757,Web:24859,total:352207},
   {month:"Apr'26","M-Site":172610,Android:96133,IOS:31016,Botify:29560,Web:29723,total:359042},
@@ -174,38 +174,38 @@ const MONTHLY_SOURCE = [
 ];
 
 const STATE_MONTHLY = [
-  {state:"Maharashtra","Jan'26":49115,"Feb'26":43322,"Mar'26":58931,"Apr'26":62038,"May'26":67866,"Jun'26":58873,"Jul'26":59864,"Aug'26":70844},
-  {state:"Delhi","Jan'26":47466,"Feb'26":45487,"Mar'26":58937,"Apr'26":60758,"May'26":59223,"Jun'26":48157,"Jul'26":45491,"Aug'26":49652},
-  {state:"Uttar Pradesh","Jan'26":34055,"Feb'26":28044,"Mar'26":36431,"Apr'26":38424,"May'26":39741,"Jun'26":33637,"Jul'26":30405,"Aug'26":36247},
-  {state:"Karnataka","Jan'26":22435,"Feb'26":19063,"Mar'26":28801,"Apr'26":28266,"May'26":26268,"Jun'26":24504,"Jul'26":24101,"Aug'26":27303},
-  {state:"Gujarat","Jan'26":17521,"Feb'26":15318,"Mar'26":21949,"Apr'26":23446,"May'26":26803,"Jun'26":23448,"Jul'26":29257,"Aug'26":37735},
-  {state:"Haryana","Jan'26":19320,"Feb'26":16875,"Mar'26":21570,"Apr'26":21963,"May'26":21619,"Jun'26":18088,"Jul'26":18089,"Aug'26":20115},
-  {state:"Rajasthan","Jan'26":18640,"Feb'26":16843,"Mar'26":20260,"Apr'26":19854,"May'26":21224,"Jun'26":18964,"Jul'26":18684,"Aug'26":21043},
-  {state:"Telangana","Jan'26":15332,"Feb'26":12344,"Mar'26":18086,"Apr'26":18284,"May'26":19456,"Jun'26":15648,"Jul'26":14662,"Aug'26":16475},
-  {state:"Tamil Nadu","Jan'26":11146,"Feb'26":10295,"Mar'26":15656,"Apr'26":13415,"May'26":11755,"Jun'26":12370,"Jul'26":11885,"Aug'26":13262},
-  {state:"Madhya Pradesh","Jan'26":9896,"Feb'26":8326,"Mar'26":10845,"Apr'26":10760,"May'26":10738,"Jun'26":9363,"Jul'26":9392,"Aug'26":11724},
-  {state:"West Bengal","Jan'26":9304,"Feb'26":8752,"Mar'26":11649,"Apr'26":11238,"May'26":10482,"Jun'26":8895,"Jul'26":8766,"Aug'26":9387},
-  {state:"Bihar","Jan'26":6864,"Feb'26":5659,"Mar'26":6999,"Apr'26":8061,"May'26":8913,"Jun'26":7289,"Jul'26":7704,"Aug'26":7965},
-  {state:"Punjab","Jan'26":6447,"Feb'26":5505,"Mar'26":5844,"Apr'26":5938,"May'26":6375,"Jun'26":5950,"Jul'26":7048,"Aug'26":9946},
-  {state:"Chandigarh","Jan'26":2821,"Feb'26":2101,"Mar'26":4243,"Apr'26":5588,"May'26":7788,"Jun'26":7200,"Jul'26":7898,"Aug'26":12002},
-  {state:"Odisha","Jan'26":3376,"Feb'26":3152,"Mar'26":4404,"Apr'26":4491,"May'26":4042,"Jun'26":3977,"Jul'26":3920,"Aug'26":5022},
-  {state:"Jharkhand","Jan'26":3493,"Feb'26":2873,"Mar'26":3884,"Apr'26":4287,"May'26":4372,"Jun'26":3477,"Jul'26":3598,"Aug'26":4061},
-  {state:"Andhra Pradesh","Jan'26":3636,"Feb'26":3357,"Mar'26":4394,"Apr'26":3643,"May'26":4076,"Jun'26":3522,"Jul'26":3046,"Aug'26":3608},
-  {state:"Kerala","Jan'26":3100,"Feb'26":2838,"Mar'26":4023,"Apr'26":4061,"May'26":3579,"Jun'26":3403,"Jul'26":2896,"Aug'26":3297},
-  {state:"Uttarakhand","Jan'26":3090,"Feb'26":2851,"Mar'26":2853,"Apr'26":2769,"May'26":2852,"Jun'26":2661,"Jul'26":2539,"Aug'26":3216},
-  {state:"Chhattisgarh","Jan'26":2971,"Feb'26":2478,"Mar'26":2949,"Apr'26":2469,"May'26":2642,"Jun'26":2661,"Jul'26":2500,"Aug'26":3168},
-  {state:"Assam","Jan'26":2407,"Feb'26":2252,"Mar'26":3001,"Apr'26":3033,"May'26":2616,"Jun'26":2593,"Jul'26":2053,"Aug'26":2783},
-  {state:"Jammu & Kashmir","Jan'26":2539,"Feb'26":1959,"Mar'26":2302,"Apr'26":2094,"May'26":1731,"Jun'26":1955,"Jul'26":1901,"Aug'26":2107},
-  {state:"Himachal Pradesh","Jan'26":1716,"Feb'26":1659,"Mar'26":2049,"Apr'26":1754,"May'26":1666,"Jun'26":1345,"Jul'26":1490,"Aug'26":1776},
-  {state:"Goa","Jan'26":587,"Feb'26":472,"Mar'26":617,"Apr'26":739,"May'26":805,"Jun'26":838,"Jul'26":787,"Aug'26":822},
-  {state:"Pondicherry","Jan'26":385,"Feb'26":329,"Mar'26":480,"Apr'26":593,"May'26":536,"Jun'26":359,"Jul'26":397,"Aug'26":443},
-  {state:"Tripura","Jan'26":184,"Feb'26":174,"Mar'26":227,"Apr'26":208,"May'26":295,"Jun'26":279,"Jul'26":189,"Aug'26":273},
-  {state:"Meghalaya","Jan'26":180,"Feb'26":230,"Mar'26":229,"Apr'26":325,"May'26":349,"Jun'26":118,"Jul'26":120,"Aug'26":222},
-  {state:"Dadra and Nagar Haveli","Jan'26":127,"Feb'26":67,"Mar'26":64,"Apr'26":71,"May'26":45,"Jun'26":103,"Jul'26":153,"Aug'26":206},
-  {state:"Arunachal Pradesh","Jan'26":138,"Feb'26":116,"Mar'26":112,"Apr'26":108,"May'26":98,"Jun'26":83,"Jul'26":79,"Aug'26":93},
-  {state:"Nagaland","Jan'26":96,"Feb'26":71,"Mar'26":92,"Apr'26":116,"May'26":108,"Jun'26":67,"Jul'26":123,"Aug'26":101},
-  {state:"Sikkim","Jan'26":64,"Feb'26":81,"Mar'26":89,"Apr'26":119,"May'26":65,"Jun'26":88,"Jul'26":113,"Aug'26":85},
-  {state:"Manipur","Jan'26":65,"Feb'26":88,"Mar'26":77,"Apr'26":54,"May'26":39,"Jun'26":57,"Jul'26":38,"Aug'26":16},
+  {state:"Maharashtra","Jan'26":47629,"Feb'26":43322,"Mar'26":58931,"Apr'26":62038,"May'26":67866,"Jun'26":58873,"Jul'26":59864,"Aug'26":70844},
+  {state:"Delhi","Jan'26":46055,"Feb'26":45487,"Mar'26":58937,"Apr'26":60758,"May'26":59223,"Jun'26":48157,"Jul'26":45491,"Aug'26":49652},
+  {state:"Uttar Pradesh","Jan'26":33171,"Feb'26":28044,"Mar'26":36431,"Apr'26":38424,"May'26":39741,"Jun'26":33637,"Jul'26":30405,"Aug'26":36247},
+  {state:"Karnataka","Jan'26":21768,"Feb'26":19063,"Mar'26":28801,"Apr'26":28266,"May'26":26268,"Jun'26":24504,"Jul'26":24101,"Aug'26":27303},
+  {state:"Gujarat","Jan'26":17003,"Feb'26":15318,"Mar'26":21949,"Apr'26":23446,"May'26":26803,"Jun'26":23448,"Jul'26":29257,"Aug'26":37735},
+  {state:"Haryana","Jan'26":18824,"Feb'26":16875,"Mar'26":21570,"Apr'26":21963,"May'26":21619,"Jun'26":18088,"Jul'26":18089,"Aug'26":20115},
+  {state:"Rajasthan","Jan'26":18131,"Feb'26":16843,"Mar'26":20260,"Apr'26":19854,"May'26":21224,"Jun'26":18964,"Jul'26":18684,"Aug'26":21043},
+  {state:"Telangana","Jan'26":14846,"Feb'26":12344,"Mar'26":18086,"Apr'26":18284,"May'26":19456,"Jun'26":15648,"Jul'26":14662,"Aug'26":16475},
+  {state:"Tamil Nadu","Jan'26":10846,"Feb'26":10295,"Mar'26":15656,"Apr'26":13415,"May'26":11755,"Jun'26":12370,"Jul'26":11885,"Aug'26":13262},
+  {state:"Madhya Pradesh","Jan'26":9654,"Feb'26":8326,"Mar'26":10845,"Apr'26":10760,"May'26":10738,"Jun'26":9363,"Jul'26":9392,"Aug'26":11724},
+  {state:"West Bengal","Jan'26":9021,"Feb'26":8752,"Mar'26":11649,"Apr'26":11238,"May'26":10482,"Jun'26":8895,"Jul'26":8766,"Aug'26":9387},
+  {state:"Bihar","Jan'26":6733,"Feb'26":5659,"Mar'26":6999,"Apr'26":8061,"May'26":8913,"Jun'26":7289,"Jul'26":7704,"Aug'26":7965},
+  {state:"Punjab","Jan'26":6267,"Feb'26":5505,"Mar'26":5844,"Apr'26":5938,"May'26":6375,"Jun'26":5950,"Jul'26":7048,"Aug'26":9946},
+  {state:"Chandigarh","Jan'26":2754,"Feb'26":2101,"Mar'26":4243,"Apr'26":5588,"May'26":7788,"Jun'26":7200,"Jul'26":7898,"Aug'26":12002},
+  {state:"Odisha","Jan'26":3276,"Feb'26":3152,"Mar'26":4404,"Apr'26":4491,"May'26":4042,"Jun'26":3977,"Jul'26":3920,"Aug'26":5022},
+  {state:"Jharkhand","Jan'26":3395,"Feb'26":2873,"Mar'26":3884,"Apr'26":4287,"May'26":4372,"Jun'26":3477,"Jul'26":3598,"Aug'26":4061},
+  {state:"Andhra Pradesh","Jan'26":3555,"Feb'26":3357,"Mar'26":4394,"Apr'26":3643,"May'26":4076,"Jun'26":3522,"Jul'26":3046,"Aug'26":3608},
+  {state:"Kerala","Jan'26":3028,"Feb'26":2838,"Mar'26":4023,"Apr'26":4061,"May'26":3579,"Jun'26":3403,"Jul'26":2896,"Aug'26":3297},
+  {state:"Uttarakhand","Jan'26":3025,"Feb'26":2851,"Mar'26":2853,"Apr'26":2769,"May'26":2852,"Jun'26":2661,"Jul'26":2539,"Aug'26":3216},
+  {state:"Chhattisgarh","Jan'26":2907,"Feb'26":2478,"Mar'26":2949,"Apr'26":2469,"May'26":2642,"Jun'26":2661,"Jul'26":2500,"Aug'26":3168},
+  {state:"Assam","Jan'26":2374,"Feb'26":2252,"Mar'26":3001,"Apr'26":3033,"May'26":2616,"Jun'26":2593,"Jul'26":2053,"Aug'26":2783},
+  {state:"Jammu & Kashmir","Jan'26":2471,"Feb'26":1959,"Mar'26":2302,"Apr'26":2094,"May'26":1731,"Jun'26":1955,"Jul'26":1901,"Aug'26":2107},
+  {state:"Himachal Pradesh","Jan'26":1703,"Feb'26":1659,"Mar'26":2049,"Apr'26":1754,"May'26":1666,"Jun'26":1345,"Jul'26":1490,"Aug'26":1776},
+  {state:"Goa","Jan'26":553,"Feb'26":472,"Mar'26":617,"Apr'26":739,"May'26":805,"Jun'26":838,"Jul'26":787,"Aug'26":822},
+  {state:"Pondicherry","Jan'26":367,"Feb'26":329,"Mar'26":480,"Apr'26":593,"May'26":536,"Jun'26":359,"Jul'26":397,"Aug'26":443},
+  {state:"Tripura","Jan'26":181,"Feb'26":174,"Mar'26":227,"Apr'26":208,"May'26":295,"Jun'26":279,"Jul'26":189,"Aug'26":273},
+  {state:"Meghalaya","Jan'26":177,"Feb'26":230,"Mar'26":229,"Apr'26":325,"May'26":349,"Jun'26":118,"Jul'26":120,"Aug'26":222},
+  {state:"Dadra and Nagar Haveli","Jan'26":124,"Feb'26":67,"Mar'26":64,"Apr'26":71,"May'26":45,"Jun'26":103,"Jul'26":153,"Aug'26":206},
+  {state:"Arunachal Pradesh","Jan'26":137,"Feb'26":116,"Mar'26":112,"Apr'26":108,"May'26":98,"Jun'26":83,"Jul'26":79,"Aug'26":93},
+  {state:"Nagaland","Jan'26":95,"Feb'26":71,"Mar'26":92,"Apr'26":116,"May'26":108,"Jun'26":67,"Jul'26":123,"Aug'26":101},
+  {state:"Sikkim","Jan'26":63,"Feb'26":81,"Mar'26":89,"Apr'26":119,"May'26":65,"Jun'26":88,"Jul'26":113,"Aug'26":85},
+  {state:"Manipur","Jan'26":64,"Feb'26":88,"Mar'26":77,"Apr'26":54,"May'26":39,"Jun'26":57,"Jul'26":38,"Aug'26":16},
   {state:"Andaman & Nicobar","Jan'26":33,"Feb'26":38,"Mar'26":58,"Apr'26":41,"May'26":24,"Jun'26":76,"Jul'26":88,"Aug'26":60},
   {state:"Daman and Diu","Jan'26":49,"Feb'26":55,"Mar'26":86,"Apr'26":15,"May'26":20,"Jun'26":45,"Jul'26":22,"Aug'26":83},
   {state:"Mizoram","Jan'26":18,"Feb'26":18,"Mar'26":16,"Apr'26":19,"May'26":7,"Jun'26":25,"Jul'26":16,"Aug'26":28}
@@ -265,14 +265,15 @@ const LISTING_T2L = [
 ];
 
 const RENEWAL_MONTHLY = [
-  {month:"Jan'26",due:263,renewed:90,churned:173,rate:34.2},
+  {month:"Jan'26",due:259,renewed:86,churned:173,rate:33.2},
   {month:"Feb'26",due:190,renewed:80,churned:110,rate:42.1},
   {month:"Mar'26",due:217,renewed:101,churned:116,rate:46.5},
   {month:"Apr'26",due:194,renewed:84,churned:110,rate:43.3},
   {month:"May'26",due:121,renewed:70,churned:51,rate:57.9},
   {month:"Jun'26",due:130,renewed:69,churned:61,rate:53.1},
   {month:"Jul'26",due:147,renewed:65,churned:82,rate:44.2},
-  {month:"Aug'26",due:149,renewed:45,churned:104,rate:30.2}
+  {month:"Aug'26",due:149,renewed:45,churned:104,rate:30.2},
+  {month:"Sep'26",due:6,renewed:0,churned:6,rate:0.0}
 ];
 
 const SRC_COLS  = {  'M-Site':'#6366f1', Android:'#10b981', IOS:'#f59e0b', Botify:'#ef4444', Web:'#8b5cf6' };
